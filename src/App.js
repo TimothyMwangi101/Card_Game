@@ -1,6 +1,20 @@
 import React from 'react';
 import './App.css';
 
+const values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+const suits = ["C", "D", "H", "S"];
+const cards = [];
+
+for (let i = 0; i < values.length; i++) {
+  for (let s = 0; s < suits.length; s++)
+    cards.push(values[i] + suits[s])
+}
+
+function fetchCardPNG(card) {
+  card += ".png";
+  return "./cards/" + card;
+}
+
 function ControlButtons() {
   return (
     <div  id="buttonDiv">
