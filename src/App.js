@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 
 const values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
@@ -15,9 +15,10 @@ function fetchCardPNG(card) {
   return "./cards/" + card;
 }
 
+
 function ControlButtons() {
   return (
-    <div  id="buttonDiv">
+    <div id="buttonDiv">
       <button type="button" className="btn btn-outline-primary btn-sm custom-btn">Deal 5</button>
       <button type="button" className="btn btn-outline-secondary custom-btn">Deal 7</button>
       <button type="button" className="btn btn-outline-success custom-btn">Reset</button>
@@ -28,13 +29,46 @@ function ControlButtons() {
   );
 }
 
-function App() {
+function Header() {
+  const [showCardDiv, setShowCardDiv] = useState(false);
+  const [card, setCard] = useState("");
+  const [index, setIndex] = useState(Math.floor(Math.random() * cards.length));
+
+  function handleClick() {
+    setIndex(Math.floor(Math.random() * cards.length));
+    setCard(fetchCardPNG(cards[index]));
+    setShowCardDiv(true);
+  }
+  
   return (
     <header className='d-flex align-items-center flex-column container'>
-      <h1 id="hi" className='text-center'>Hello World</h1>;
-      <img src="https://deckofcardsapi.com/static/img/back.png" alt='back turned card' id='backCard'/>
+      <h1 id="hi" className='text-center'>Hello World</h1>
+      <img
+        src="https://deckofcardsapi.com/static/img/back.png"
+        alt='back turned card'
+        id='backCard'
+        className='card'
+        onClick={handleClick}
+      />
       <ControlButtons />
+      {showCardDiv &&
+        (<div id="cardDiv" className='container'>
+          <img 
+          id={index} 
+          src={card} 
+          alt='A Card'
+          className='card'
+          />
+        </div>)}
     </header>
+  );
+}
+
+function App() {
+  return (
+    <>
+      <Header />
+    </>
   );
 }
 export default App;
