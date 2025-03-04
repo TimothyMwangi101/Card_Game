@@ -52,12 +52,17 @@ function ControlButtons() {
 
 function Header() {
   const [showCardDiv, setShowCardDiv] = useState(false);
-  const [card, setCard] = useState("");
+  const [card, setCard] = useState([]);
   const [index, setIndex] = useState(Math.floor(Math.random() * cards.length));
+  const [cardCount, setCardCount] = useState(remainingCards());
 
   function handleClick() {
     setIndex(Math.floor(Math.random() * cards.length));
-    setCard(fetchCardPNG(cards[index]));
+    let cardLinks = [];
+    let c = fetchCardPNG(cards[index]);
+    cardLinks.push(c);
+    setCard(prev => [...prev, cardLinks]);
+    setCardCount(remainingCards());
     setShowCardDiv(true);
   }
   
@@ -72,15 +77,23 @@ function Header() {
         onClick={handleClick}
       />
       <ControlButtons />
+      {<p>Remaining Cards: {cardCount}</p>}
       {showCardDiv &&
-        (<div id="cardDiv" className='container'>
-          <img 
-          id={index} 
-          src={card} 
-          alt='A Card'
-          className='card'
-          />
+        (<div id="cardDiv" className='d-flex align-items-center flex-column container'>
+          <div className='row'>
+            {card.map((src, i) => (
+              <div className='col-sm'>
+                <img
+                // id={`Card${cards[i]}`}
+                src={src}
+                alt='A Card'
+                className='card playcard'
+              />
+              </div>
+            ))}
+          </div>
         </div>)}
+
     </header>
   );
 }
