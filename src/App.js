@@ -3,18 +3,39 @@ import './App.css';
 
 const values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 const suits = ["C", "D", "H", "S"];
-const cards = [];
+let cards = [];
 
 for (let i = 0; i < values.length; i++) {
-  for (let s = 0; s < suits.length; s++)
-    cards.push(values[i] + suits[s])
+  for (let s = 0; s < suits.length; s++) {
+    const value = values[i] + suits[s];
+    cards.push({
+      VALUE: value,
+      DRAW: true,
+      PATH: `./cards/${value}.png`
+    })
+  }
 }
 
 function fetchCardPNG(card) {
-  card += ".png";
-  return "./cards/" + card;
+  if (!card.DRAW)
+    return fetchCardPNG(cards[Math.floor(Math.random() * cards.length)]);
+  const path = card.PATH;
+  card.DRAW = false;
+  return path;
 }
 
+function resetDraw() {
+  cards.forEach(card => {
+    card.DRAW = true;
+  });
+}
+function remainingCards() {
+  let rem = 0;
+  cards.forEach(c => {
+    if (c.DRAW) rem++;
+  });
+  return rem;
+}
 
 function ControlButtons() {
   return (
@@ -63,6 +84,7 @@ function Header() {
     </header>
   );
 }
+
 
 function App() {
   return (
