@@ -1,12 +1,17 @@
  .card {
   max-width: 225px;
+  justify-self: center;
+  cursor: pointer;
 } 
+.col-sm {
+  max-width: 300px;
+}
 /* .playcard {
   width: 30%;
 } */
-#backCard {
+/* #backCard {
   cursor: pointer;
-}
+} */
 
 .custom-btn {
   margin: 5px;

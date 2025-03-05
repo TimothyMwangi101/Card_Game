@@ -2,54 +2,39 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import Card from './Card';
 
+const Cards = createCards();
 
-const values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-const suits = ["C", "D", "H", "S"];
-let cards = [];
-
-for (let i = 0; i < values.length; i++) {
-  for (let s = 0; s < suits.length; s++) {
-    const value = values[i] + suits[s];
-    cards.push({
-      VALUE: value,
-      _ISDRAWN: true,
-      get ISDRAWN() {
-        return this._ISDRAWN;
-      },
-      set ISDRAWN(value) {
-        this._ISDRAWN = value;
-      },
-      PATH: `./cards/${value}.png`,
-      DELETED: false
-    })
+function createCards() {
+  const values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+  const suits = ["C", "D", "H", "S"];
+  let arr = [];
+  for (let i = 0; i < values.length; i++) {
+    for (let s = 0; s < suits.length; s++) {
+      arr.push(new Card(values[i] + suits[s]));
+    }
   }
+  return arr;
 }
 
 function fetchCard(index) {
-  const card = cards[index];
+  const card = Cards[index];
   //if i cant draw or is deleted
-  if (!card.ISDRAWN || !card.DELETED)
-    return fetchCard(Math.floor(Math.random() * cards.length));
-  card.ISDRAWN = false;
+  if (card.getIsDeleted() || card.getIsDrawn())
+    return fetchCard(Math.floor(Math.random() * Cards.length));
+  card.setIsDrawn(true);
   return card;
 }
 
 function resetDraw() {
-  cards.forEach(card => {
-    card.ISDRAWN = true;
+  Cards.forEach(card => {
+    card.setIsDeleted(false);
+    card.setIsDrawn(false);
   });
-}
-function remainingCards() {
-  let rem = 0;
-  cards.forEach(c => {
-    if (c.ISDRAWN && !c.DELETED) rem++;
-  });
-  return rem;
 }
 
 function ControlButtons({ props }) {
   return (
-    <div id="buttonDiv">
+    <div id="buttonDiv" className='d-flex flex-wrap flex-row'>
       <button type="button" className="btn btn-outline-primary btn-sm custom-btn" onClick={() => props.handleClick(5)}>Deal 5</button>
       <button type="button" className="btn btn-outline-secondary custom-btn" onClick={() => props.handleClick(7)}>Deal 7</button>
       <button type="button" className="btn btn-outline-success custom-btn" onClick={() => props.handleReset()}>Reset</button>
@@ -60,44 +45,70 @@ function ControlButtons({ props }) {
   );
 }
 
+function DisplayCards({ props }) {
+  if (props.showCardDiv) {
+    return (
+      <div id="cardDiv" className='d-flex align-items-center flex-column container'>
+        <div className='row justify-content-center flex-row flex-wrap'>
+          {
+            props.cardState.map((c) => (
+              <div className='col-sm'>
+                <img
+                  id={`Card:${c.getValue()}`}
+                  src={c.getPath()}
+                  alt={`A Card of value:${c.getValue()}`}
+                  className={"card"}
+                />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    );
+  }
+  return (
+    <></>
+  )
+}
+
 function Header() {
   const [showCardDiv, setShowCardDiv] = useState(false);
-  const [card, setCard] = useState([]);
-  const [cardCount, setCardCount] = useState(remainingCards());
-  const [clicked, setClicked] = useState("");
+  const [cardState, setCard] = useState([]);
+  const [cardCount, setCardCount] = useState(52);
+  const [picked, setPicked] = useState(false);
 
   function handleReset() {
     setCard([]);
     setShowCardDiv(false);
     resetDraw();
-    setCardCount(remainingCards());
+    setCardCount(52);
   }
 
-  function picked() {
-    if (clicked) {
+  function handlePicked() {
+    setPicked(true);
 
-    }
+    // if (clicked) {
+
+    // }
   }
 
   function handleClick(num) {
     if (num === 7 || num === 5) handleReset();
 
     if (cardCount > 0) {
-      let index = Math.floor(Math.random() * cards.length);
       const cardsToAppend = [];
 
       for (let i = 0; i < num; i++) {
+        const index = Math.floor(Math.random() * Cards.length);
         const c = fetchCard(index);
         cardsToAppend.push(c);
       }
 
       //1 gets appended, 5/7 overwrite
-      setCard((num === 1) ? prev => [...prev, cardsToAppend] : cardsToAppend)
+      setCard((num === 1) ? prev => [...prev, ...cardsToAppend] : cardsToAppend)
+      setCardCount(prev => Math.max(prev - cardsToAppend.length, 0));
+      setShowCardDiv(true);
     }
-    console.log(card);
-
-    setShowCardDiv(true);
-    setCardCount(remainingCards());
   }
 
   return (
@@ -117,30 +128,9 @@ function Header() {
         Remaining Cards: {cardCount === 0 ? "No Cards Remaining" : cardCount}
       </h3>
 
-      {
-        showCardDiv &&
-        (
-          <div id="cardDiv" className='d-flex align-items-center flex-column container'>
-            <div className='row'>
-              {
-                card.map((c) => (
-                  <div className='col-sm'>
-                    <img
-                      id={`Card${c.VALUE}`}
-                      src={c.PATH}
-                      alt={`A Card of value:${c.VALUE}`}
-                      className={clicked + "card"}
-                      onClick={picked}
-                    />
-                  </div>
-                ))
-              };
-            </div>
-          </div>
-        )
-      };
+      <DisplayCards props={{ showCardDiv, cardState, picked }} />
     </header>
-  )
+  );
 }
 
 function App() {
