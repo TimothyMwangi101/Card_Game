@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import './App.css';
 import Card from './Card';
 
@@ -48,16 +48,16 @@ function ControlButtons({ props }) {
 function DisplayCards({ props }) {
   if (props.showCardDiv) {
     return (
-      <div id="cardDiv" className='d-flex align-items-center flex-column container'>
-        <div className='row justify-content-center flex-row flex-wrap'>
+      <div id="cardDiv" className='d-flex align-items-center flex-column container flex-wrap'>
+        <div className='row justify-content-center '>
           {
             props.cardState.map((c) => (
               <div className='col-sm'>
                 <img
-                  id={`Card:${c.getValue()} ${(c.getIsPicked()) ? "picked" : ""}`}
+                  id={c.getValue()}
                   src={c.getPath()}
                   alt={`A Card of value:${c.getValue()}`}
-                  className={`card`}
+                  className={`card ${(c.getIsPicked()) ? "picked" : ""}`}
                   onClick={() => props.handlePicked(c)}
                 />
               </div>
@@ -86,11 +86,19 @@ function Header() {
   }
 
   function handlePicked(card) {
-    card.setIsPicked(!card.getIsPicked());
-    //setPicked(true);
+    const updatedCards = cardState.map(c => {
+      if (c.getValue() === card.getValue()) {
+        c.setIsPicked(!c.getIsPicked());
+      }
+      setPicked(true);
+      return c;
+    });
+    setCard(updatedCards);
   }
 
+
   function regroup() {
+    //making an exact copy
     const shuffle = [...cardState];
     for (let i = 0; i < shuffle.length; i++) {
 
@@ -144,11 +152,21 @@ function Header() {
     </div>
   );
 }
+function Footer() {
+  return (
+    <footer className='container bg-info-subtle text-center rounded my-3'>
+      <p>Cards Source: <br />
+        <a href='https://acbl.mybigcommerce.com/52-playing-cards/' target='_blank'>American Contract Bridge Team</a>
+      </p>
+    </footer>
+  )
+}
 
 function App() {
   return (
     <>
       <Header />
+      <Footer />
     </>
   );
 }
