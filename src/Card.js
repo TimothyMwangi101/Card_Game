@@ -17,9 +17,6 @@ export default class Card {
     /** @type {boolean} Whether the card has been picked. */
     #isPicked;
 
-    /** @type {boolean} Whether the card has been grouped. */
-    #isGrouped;
-
     /**
      * Creates a new Card.
      * 
@@ -31,7 +28,6 @@ export default class Card {
         this.#isDrawn = false;
         this.#isDeleted = false;
         this.#isPicked = false;
-        this.#isGrouped = false;
     }
     /**
      * Value getter 
@@ -63,12 +59,6 @@ export default class Card {
     */
     getIsPicked() { return this.#isPicked; }
 
-    /**
-     * isGrouped getter
-     * @returns {boolean} `true` if grouped
-    */
-    getIsGrouped() { return this.#isGrouped; }
-
     /** 
      * isDrawn setter 
      * @param {boolean} isDrawn new state
@@ -86,12 +76,6 @@ export default class Card {
      * @returns {boolean} isPicked new state
     */
     setIsPicked(isPicked) { this.#isPicked = isPicked; }
-
-    /**
-     * isGrouped setter
-     * @returns {boolean} isGrouped new state
-    */
-    setIsGrouped(isGrouped) { this.#isGrouped = isGrouped; }
 
     /**
      * String representation of the card

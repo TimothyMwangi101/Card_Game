@@ -16,10 +16,10 @@ function createCards() {
   return arr;
 }
 
-function fetchCard(index) {
+function fetchCard(index, wildCard = false) {
   const card = Cards[index];
   //if i cant draw or is deleted
-  if (card.getIsDeleted() || card.getIsDrawn())
+  if ((card.getIsDeleted() || card.getIsDrawn()) && !wildCard)
     return fetchCard(Math.floor(Math.random() * Cards.length));
   card.setIsDrawn(true);
   return card;
@@ -39,7 +39,7 @@ function ControlButtons({ props }) {
       <button type="button" className="btn btn-outline-secondary custom-btn" onClick={() => props.handleClick(7)}>Deal 7</button>
       <button type="button" className="btn btn-outline-success custom-btn" onClick={() => props.handleReset()}>Reset</button>
       <button type="button" className="btn btn-outline-danger custom-btn">Toss</button>
-      <button type="button" className="btn btn-outline-warning custom-btn">Wildcard</button>
+      <button type="button" className="btn btn-outline-warning custom-btn" onClick={() => props.handleClick(1, true)}>Wildcard</button>
       <button type="button" className="btn btn-outline-info custom-btn" onClick={() => props.regroup()}>Regroup</button>
     </div>
   );
@@ -91,7 +91,7 @@ function Header() {
   }
 
   function regroup() {
-    const shuffle = [ ...cardState];
+    const shuffle = [...cardState];
     for (let i = 0; i < shuffle.length; i++) {
 
       let card = shuffle[i];
@@ -104,15 +104,15 @@ function Header() {
     setCard(shuffle);
   }
 
-  function handleClick(num) {
+  function handleClick(num, wildCard = false) {
     if (num === 7 || num === 5) handleReset();
 
-    if (cardCount > 0) {
+    if (cardCount > 0 || wildCard) {
       const cardsToAppend = [];
 
       for (let i = 0; i < num; i++) {
         const index = Math.floor(Math.random() * Cards.length);
-        const c = fetchCard(index);
+        const c = fetchCard(index, wildCard);
         cardsToAppend.push(c);
       }
 
@@ -124,7 +124,7 @@ function Header() {
   }
 
   return (
-    <header className='d-flex align-items-center flex-column container'>
+    <div className='d-flex align-items-center flex-column container'>
       <h1 id="hi" className='text-center'>Card Game</h1>
       <img
         src="https://deckofcardsapi.com/static/img/back.png"
@@ -141,7 +141,7 @@ function Header() {
       </h3>
 
       <DisplayCards props={{ showCardDiv, cardState, handlePicked }} />
-    </header>
+    </div>
   );
 }
 
