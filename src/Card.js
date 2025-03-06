@@ -14,8 +14,15 @@ export default class Card {
     /** @type {boolean} Whether the card has been deleted. */
     #isDeleted;
 
+    /** @type {boolean} Whether the card has been picked. */
+    #isPicked;
+
+    /** @type {boolean} Whether the card has been grouped. */
+    #isGrouped;
+
     /**
      * Creates a new Card.
+     * 
      * @param {string} value - The suit and value of a card.
     */
     constructor(value) {
@@ -23,6 +30,8 @@ export default class Card {
         this.#path = `./cards/${value}.png`;
         this.#isDrawn = false;
         this.#isDeleted = false;
+        this.#isPicked = false;
+        this.#isGrouped = false;
     }
     /**
      * Value getter 
@@ -48,6 +57,18 @@ export default class Card {
     */
     getIsDeleted() { return this.#isDeleted; }
 
+    /**
+     * isPicked getter
+     * @returns {boolean} `true` if picke
+    */
+    getIsPicked() { return this.#isPicked; }
+
+    /**
+     * isGrouped getter
+     * @returns {boolean} `true` if grouped
+    */
+    getIsGrouped() { return this.#isGrouped; }
+
     /** 
      * isDrawn setter 
      * @param {boolean} isDrawn new state
@@ -61,10 +82,22 @@ export default class Card {
     setIsDeleted(isDeleted) { this.#isDeleted = isDeleted; }
 
     /**
+     * isPicked setter
+     * @returns {boolean} isPicked new state
+    */
+    setIsPicked(isPicked) { this.#isPicked = isPicked; }
+
+    /**
+     * isGrouped setter
+     * @returns {boolean} isGrouped new state
+    */
+    setIsGrouped(isGrouped) { this.#isGrouped = isGrouped; }
+
+    /**
      * String representation of the card
      * @returns {string} the card fields
     */
     toString() {
-        return `Value: "${this.#value}", Path: "${this.#path}", IsDrawn: ${this.#isDrawn}, IsDeleted: ${this.#isDeleted}`;
+        return `Value: "${this.#value}", Path: "${this.#path}", IsDrawn: ${this.#isDrawn}, IsDeleted: ${this.#isDeleted}, IsPicked: ${this.#isPicked}`;
     }
 }

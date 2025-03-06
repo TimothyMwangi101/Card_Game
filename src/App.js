@@ -40,7 +40,7 @@ function ControlButtons({ props }) {
       <button type="button" className="btn btn-outline-success custom-btn" onClick={() => props.handleReset()}>Reset</button>
       <button type="button" className="btn btn-outline-danger custom-btn">Toss</button>
       <button type="button" className="btn btn-outline-warning custom-btn">Wildcard</button>
-      <button type="button" className="btn btn-outline-info custom-btn">Regroup</button>
+      <button type="button" className="btn btn-outline-info custom-btn" onClick={() => props.regroup()}>Regroup</button>
     </div>
   );
 }
@@ -54,10 +54,11 @@ function DisplayCards({ props }) {
             props.cardState.map((c) => (
               <div className='col-sm'>
                 <img
-                  id={`Card:${c.getValue()}`}
+                  id={`Card:${c.getValue()} ${(c.getIsPicked()) ? "picked" : ""}`}
                   src={c.getPath()}
                   alt={`A Card of value:${c.getValue()}`}
-                  className={"card"}
+                  className={`card`}
+                  onClick={() => props.handlePicked(c)}
                 />
               </div>
             ))
@@ -84,12 +85,23 @@ function Header() {
     setCardCount(52);
   }
 
-  function handlePicked() {
-    setPicked(true);
+  function handlePicked(card) {
+    card.setIsPicked(!card.getIsPicked());
+    //setPicked(true);
+  }
 
-    // if (clicked) {
+  function regroup() {
+    const shuffle = [ ...cardState];
+    for (let i = 0; i < shuffle.length; i++) {
 
-    // }
+      let card = shuffle[i];
+      const index = Math.floor(Math.random() * shuffle.length);
+      let temp = shuffle[index];
+
+      shuffle[i] = temp;
+      shuffle[index] = card;
+    }
+    setCard(shuffle);
   }
 
   function handleClick(num) {
@@ -122,13 +134,13 @@ function Header() {
         onClick={() => handleClick(1)}
       />
 
-      <ControlButtons props={{ handleClick, handleReset }} />
+      <ControlButtons props={{ handleClick, handleReset, regroup }} />
 
       <h3 className={`${cardCount === 0 ? 'text-danger' : 'text-info'} mb-4`}>
         Remaining Cards: {cardCount === 0 ? "No Cards Remaining" : cardCount}
       </h3>
 
-      <DisplayCards props={{ showCardDiv, cardState, picked }} />
+      <DisplayCards props={{ showCardDiv, cardState, handlePicked }} />
     </header>
   );
 }

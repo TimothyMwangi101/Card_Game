@@ -1,4 +1,4 @@
- .card {
+.card {
   max-width: 225px;
   justify-self: center;
   cursor: pointer;
@@ -6,6 +6,13 @@
 .col-sm {
   max-width: 300px;
 }
+#picked {
+  border: 4px solid #ffcc00; /* Bright yellow border */
+  box-shadow: 0 0 15px rgba(255, 204, 0, 0.8); /* Glow effect */
+  transform: scale(1.1); /* Slightly enlarge the card */
+  transition: all 0.3s ease; /* Smooth transition */
+}
+
 /* .playcard {
   width: 30%;
 } */
