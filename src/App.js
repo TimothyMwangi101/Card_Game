@@ -3,7 +3,10 @@ import './App.css';
 import Card from './Card';
 
 const Cards = createCards();
-
+/**
+ * Combines the values and suits to create a unique card object.
+ * @returns {Card[]} an Array of Card objects
+ */
 function createCards() {
   const values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
   const suits = ["C", "D", "H", "S"];
@@ -15,7 +18,12 @@ function createCards() {
   }
   return arr;
 }
-
+/**
+ * Fetches a card from `Cards[]` and returns it. Doesn't return drawn cards
+ * @param {number} index the index of a card in the `Cards[]`
+ * @param {boolean} wildcard if true, ignore weather a card is drawn
+ * @returns {Card} A card
+ */
 function fetchCard(index, wildCard = false) {
   const card = Cards[index];
   //if i cant draw or is deleted
@@ -24,14 +32,26 @@ function fetchCard(index, wildCard = false) {
   card.setIsDrawn(true);
   return card;
 }
-
+/**
+ * Set's `isDeleted()` and `isDrawn()` to  `false` for evrey card
+ * @returns {void}
+ */
 function resetDraw() {
   Cards.forEach(card => {
     card.setIsDeleted(false);
     card.setIsDrawn(false);
   });
 }
-
+/**
+ * Renders buttons that control card dealing, resetting, tossing, wildcard drawing, and regrouping.
+ *
+ * @param {object} props The props.
+ * @param {function} props.handleClick Handle Click
+ * @param {function} props.handleReset Handle reset.
+ * @param {function} props.tossed Tossing function.
+ * @param {function} props.regroup Regrouping function.
+ * @returns {JSX.Element} A div containing multiple button elements.
+*/
 function ControlButtons({ props }) {
   return (
     <div id="buttonDiv" className='d-flex flex-wrap flex-row'>
@@ -44,7 +64,16 @@ function ControlButtons({ props }) {
     </div>
   );
 }
-
+/**
+ * Renders a grid of Cards if `showCardDiv
+ *
+ * @param {object} props The props.
+ * @param {boolean} props.showCardDiv if `true` the grid will display
+ * @param {Card[]} props.cardState A `Card[]`
+ * @param {function} props.handlePicked Handle Pick.
+ * @returns {JSX.Element} Renders the cards or nothing
+ *
+*/
 function DisplayCards({ props }) {
   if (props.showCardDiv) {
     return (
@@ -71,20 +100,33 @@ function DisplayCards({ props }) {
     <></>
   )
 }
-
+/**
+ * Manages the state and logic for a card game, including dealing, picking, tossing, and regrouping.
+ * @returns {JSX.Element} The rendered Header component.
+*/
 function Header() {
   const [showCardDiv, setShowCardDiv] = useState(false);
   const [cardState, setCard] = useState([]);
   const [cardCount, setCardCount] = useState(52);
   const [picked, setPicked] = useState(null);
 
+  /**
+   * Returns everything to the initial state
+   * @returns {void}
+   */
   function handleReset() {
     setCard([]);
     setShowCardDiv(false);
     resetDraw();
+    setPicked(null);
     setCardCount(52);
   }
 
+  /**
+   * Handles the logic when a card is picked or unpicked and updates state
+   * @param {Card} card The Card object that was picked.
+   * @returns {void}
+  */
   function handlePicked(card) {
     const updatedCards = [...cardState];
     let tempCard = card;
@@ -122,7 +164,10 @@ function Header() {
     setPicked(card);
     setCard(updatedCards);
   }
-
+  /**
+   * Attempts to delete a card. Id doesnt work
+   * @returns {void}
+   */
   function tossed() {
     if (picked) {
       const updatedCards = cardState.filter(c => !c.equals(picked));
@@ -134,7 +179,10 @@ function Header() {
     }
   }
 
-
+  /**
+   * Shuffles the cards in the list
+   * @returns {void}
+   */
   function regroup() {
     //making an exact copy
     const shuffle = [...cardState];
@@ -149,7 +197,14 @@ function Header() {
     }
     setCard(shuffle);
   }
-
+  
+  /**
+   * Handles the logic for dealing cards.
+   *
+   * @param {number} num The number of cards to deal.
+   * @param {boolean} wildCard Optional flag indicating if a wildcard draw is allowed.
+   * @returns {void}
+  */
   function handleClick(num, wildCard = false) {
     if (num === 7 || num === 5) handleReset();
 
@@ -190,6 +245,10 @@ function Header() {
     </div>
   );
 }
+/**
+ * The footer with a link to the cards
+ * @returns {JSX.Element} The footer
+*/
 function Footer() {
   return (
     <footer className='container bg-info-subtle text-center rounded my-3'>
@@ -199,7 +258,10 @@ function Footer() {
     </footer>
   )
 }
-
+/**
+ * Returns both the footer and header components to the user.
+ * @returns {JSX.Element} the app
+ */
 function App() {
   return (
     <>
