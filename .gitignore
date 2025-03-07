@@ -6,7 +6,7 @@
 .pnp.js
 package-lock.json
 package.json
-/public/cards
+README.txt
 
 # testing
 /coverage

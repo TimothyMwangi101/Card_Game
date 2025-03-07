@@ -1,4 +1,7 @@
 /**
+ * @author Timothy Mwangi
+ * StAuth10244: I Timothy Mwangi, 000937691 certify that this material is my original work. No other person's work has been used without due acknowledgement. I have not made my work available to anyone else.
+*//**
  * Represents a card with a value, an image path, and state bool flags.
  */
 export default class Card {

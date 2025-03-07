@@ -1,7 +1,14 @@
-import { React, useEffect, useState } from 'react';
+import { React, useState } from 'react';
 import './App.css';
 import Card from './Card';
+/**
+ * @author Timothy Mwangi
+ * StAuth10244: I Timothy Mwangi, 000937691 certify that this material is my original work. No other person's work has been used without due acknowledgement. I have not made my work available to anyone else.
+*/
 
+/**
+ * Array of `Card`s
+ */
 const Cards = createCards();
 /**
  * Combines the values and suits to create a unique card object.
@@ -172,8 +179,8 @@ function Header() {
     if (picked) {
       picked.setIsDeleted(true);
       setCard(cardState.filter(c => c !== picked));
-      setPicked(null); 
-      setCardCount(prev => prev - 1); 
+      setPicked(null);
+      setCardCount(prev => prev - 1);
     }
   }
 
@@ -195,7 +202,7 @@ function Header() {
     }
     setCard(shuffle);
   }
-  
+
   /**
    * Handles the logic for dealing cards.
    *

@@ -1,3 +1,7 @@
+/**
+ * @author Timothy Mwangi
+ * StAuth10244: I Timothy Mwangi, 000937691 certify that this material is my original work. No other person's work has been used without due acknowledgement. I have not made my work available to anyone else.
+*/
 .card {
   max-width: 225px;
   justify-self: center;
@@ -12,7 +16,6 @@
   transform: scale(1.1); 
   transition: all 0.3s ease; 
 }
-
 
 .custom-btn {
   margin: 5px;
