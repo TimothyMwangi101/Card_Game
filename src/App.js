@@ -170,10 +170,8 @@ function Header() {
    */
   function tossed() {
     if (picked) {
-      const updatedCards = cardState.filter(c => !c.equals(picked));
-
       picked.setIsDeleted(true);
-      setCard(updatedCards);
+      setCard(cardState.filter(c => c !== picked));
       setPicked(null); 
       setCardCount(prev => prev - 1); 
     }
