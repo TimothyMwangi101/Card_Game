@@ -78,6 +78,15 @@ export default class Card {
     setIsPicked(isPicked) { this.#isPicked = isPicked; }
 
     /**
+     * Compares the value of this and param
+     * @param {string} value The value of your search card
+     * @returns `true` if they match
+     */
+    equals(card) { 
+        return card.getValue() === this.getValue; 
+    }
+
+    /**
      * String representation of the card
      * @returns {string} the card fields
     */

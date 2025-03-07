@@ -38,7 +38,7 @@ function ControlButtons({ props }) {
       <button type="button" className="btn btn-outline-primary btn-sm custom-btn" onClick={() => props.handleClick(5)}>Deal 5</button>
       <button type="button" className="btn btn-outline-secondary custom-btn" onClick={() => props.handleClick(7)}>Deal 7</button>
       <button type="button" className="btn btn-outline-success custom-btn" onClick={() => props.handleReset()}>Reset</button>
-      <button type="button" className="btn btn-outline-danger custom-btn">Toss</button>
+      <button type="button" className="btn btn-outline-danger custom-btn" onClick={() => props.tossed()}>Toss</button>
       <button type="button" className="btn btn-outline-warning custom-btn" onClick={() => props.handleClick(1, true)}>Wildcard</button>
       <button type="button" className="btn btn-outline-info custom-btn" onClick={() => props.regroup()}>Regroup</button>
     </div>
@@ -76,7 +76,7 @@ function Header() {
   const [showCardDiv, setShowCardDiv] = useState(false);
   const [cardState, setCard] = useState([]);
   const [cardCount, setCardCount] = useState(52);
-  const [picked, setPicked] = useState(false);
+  const [picked, setPicked] = useState(null);
 
   function handleReset() {
     setCard([]);
@@ -86,14 +86,52 @@ function Header() {
   }
 
   function handlePicked(card) {
-    const updatedCards = cardState.map(c => {
-      if (c.getValue() === card.getValue()) {
-        c.setIsPicked(!c.getIsPicked());
+    const updatedCards = [...cardState];
+    let tempCard = card;
+    tempCard.setIsPicked(!tempCard.getIsPicked());
+
+    if (picked === card) {
+      for (let i = 0; i < updatedCards.length; i++) {
+        if (updatedCards[i].equals(picked)) {
+          updatedCards[i].setIsPicked(false);
+          break;
+        }
       }
-      setPicked(true);
-      return c;
-    });
+    } else if (picked) {
+      const currentPicked = picked;
+      //flip the bool
+      currentPicked.setIsPicked(!currentPicked.getIsPicked());
+      for (let i = 0; i < updatedCards.length; i++) {
+        //deselecting current picked
+        if (updatedCards[i].equals(currentPicked)) {
+          updatedCards[i].setIsPicked(false);
+        }
+        //updating the array with the picked card
+        else if (updatedCards[i].equals(card)) {
+          updatedCards[i] = card;
+        }
+      }
+    } else {
+      for (let i = 0; i < updatedCards.length; i++) {
+        if (updatedCards[i].equals(card)) {
+          updatedCards[i] = card;
+          break;
+        }
+      }
+    }
+    setPicked(card);
     setCard(updatedCards);
+  }
+
+  function tossed() {
+    if (picked) {
+      const updatedCards = cardState.filter(c => !c.equals(picked));
+
+      picked.setIsDeleted(true);
+      setCard(updatedCards);
+      setPicked(null); 
+      setCardCount(prev => prev - 1); 
+    }
   }
 
 
@@ -102,9 +140,9 @@ function Header() {
     const shuffle = [...cardState];
     for (let i = 0; i < shuffle.length; i++) {
 
-      let card = shuffle[i];
+      const card = shuffle[i];
       const index = Math.floor(Math.random() * shuffle.length);
-      let temp = shuffle[index];
+      const temp = shuffle[index];
 
       shuffle[i] = temp;
       shuffle[index] = card;
@@ -142,7 +180,7 @@ function Header() {
         onClick={() => handleClick(1)}
       />
 
-      <ControlButtons props={{ handleClick, handleReset, regroup }} />
+      <ControlButtons props={{ handleClick, handleReset, regroup, tossed }} />
 
       <h3 className={`${cardCount === 0 ? 'text-danger' : 'text-info'} mb-4`}>
         Remaining Cards: {cardCount === 0 ? "No Cards Remaining" : cardCount}
